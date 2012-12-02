@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="happyText" default="">
+    
+
+    <loadproperties srcfile="build.properties" />
+    <loadfile property="license" srcfile="license.txt" />
+
+    <tstamp>
+        <format property="build.time"
+                pattern="MMMM d, yyyy hh:mm:ss"
+                locale="en,US"/>
+    </tstamp>
+
+    <!-- initialization and cleanup -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- Define the task -->
+    <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
+        classpath="${jshint}" />
+    
+    <target name="validate" depends="clean,init">
+        <!-- Lint the code -->
+        <jshint dir="${src.dir}" includes="**/*.js" options="${jshint.options}" >
+            <report type="plain" destFile="${build.dir}/lintReport.txt" />
+        </jshint>
+    </target>
+
+    <target name="minify">
+        <apply executable="java" failonerror="true">
+            <fileset dir="${src.dir}" includes="*.js"/>
+            <mapper type="glob" from="*.js" to="${build.dir}/*-min.js"/>
+            <arg line="-jar"/>
+            <arg path="${closure}"/>
+            <arg line="${closure.options}"/>
+
+            <arg line="--js"/>
+            <srcfile/>
+            
+            <arg line="--js_output_file"/>
+            <targetfile/>
+        </apply>
+    </target>
+
+</project>
