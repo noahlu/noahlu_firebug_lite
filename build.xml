@@ -23,6 +23,12 @@
     <!-- Define the task -->
     <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" 
         classpath="${jshint}" />
+
+    <taskdef name="jsmin"
+        classname="net.matthaynes.jsmin.JSMin_Task"
+        classpath="${jsmin}"/>    
+
+    
     
     <target name="validate" depends="clean,init">
         <!-- Lint the code -->
@@ -45,6 +51,12 @@
             <arg line="--js_output_file"/>
             <targetfile/>
         </apply>
+    </target>
+
+    <target name="minify_jsmin" depends="clean,init">
+        <jsmin destdir="${build.dir}">
+            <fileset dir="${src.dir}/" includes="**/*.js"/>
+        </jsmin>
     </target>
 
 </project>
